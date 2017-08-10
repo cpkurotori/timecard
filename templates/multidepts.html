@@ -1,0 +1,15 @@
+{% extends "screen.html" %}
+    {% block box %}
+        <h1><a class="menu-button" href="/"><i class="fa fa-home" aria-hidden="true"></i></a>{{ Employee.query.get(current_user.get_id()).fn }} {{ Employee.query.get(current_user.get_id()).ln }}<a class="menu-button" href="settings"><i class="fa fa-cog" aria-hidden="true"></i></a></h1>
+        {% with user = Employee.query.get(current_user.get_id()) %}
+            {% for dept in user.depts %}
+                <a class="noline" href="#" onclick="if (confirm('You chose: {{ dept }}\nWould you like to continue?')){window.location.assign('{{ url_for('timeEntry',dept=dept) }}')}"><div class="button">{{ dept }}</div></a><br>
+            {% endfor %}
+                <a class="noline" href="{{ url_for('logout') }}"><div class="button cancel">Cancel</div></a><br>
+        {% endwith %}
+        {% with user = Employee.query.get(current_user.get_id()) %}
+            {% if user.clockedIn != "None" %}
+                <div id="currentlyClockedIn">Currently clocked in as: {{ user.clockedIn }} </div>
+            {% endif %}
+        {% endwith %}
+    {% endblock %}

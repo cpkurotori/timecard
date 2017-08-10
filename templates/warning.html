@@ -1,0 +1,14 @@
+{% extends "screen.html" %}
+{% block box %}
+    <p style="color:red">You have been clocked in since {{ time }}. Either click
+    the button to indicate that this is an error or confrim that
+    you wish to continue.</p>
+
+        <a class='noline' href="{{ url_for('error', dept=dept) }}"><div class="button">This Was An Error</div></a>
+
+        <a class='noline' href="{{ url_for('cont', dept=dept) }}"><div class="button">Confirm Continue</div></a>
+
+
+        <a class='noline' href="{{ url_for('index') }}"><div class="button cancel">Cancel</div></a><br>
+
+{% endblock %}

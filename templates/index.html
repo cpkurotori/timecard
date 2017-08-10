@@ -1,0 +1,10 @@
+{% extends "screen.html" %}
+{% block box %}
+        <h1><a class="menu-button" href="{{ url_for('portal') }}"><i class="fa fa-home" aria-hidden="true"></i></a>{{ Employee.query.get(current_user.get_id()).fn }} {{ Employee.query.get(current_user.get_id()).ln }}<a class="menu-button" href="settings"><i class="fa fa-cog" aria-hidden="true"></i></a></h1>
+        {% if current_user.is_admin() %}
+            <a class="noline" href="register"><div class="button">Register</div></a><br>
+        {% endif %}
+
+            <a class='noline' href="logout"><div class="button cancel">Logout</div></a>
+        
+{% endblock %}
