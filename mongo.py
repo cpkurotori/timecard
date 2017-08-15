@@ -31,6 +31,7 @@ class Timecard(db.Document):
     action = db.StringField()
     datetime = db.DateTimeField()
     warning = db.BoolField()
+    timecardID = db.StringField()
 
 class User():
     def __init__(self,_id,admin=False):
