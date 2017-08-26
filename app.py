@@ -5,18 +5,21 @@ def load_user(user_id):
     u = Employee.query.filter(Employee.mongo_id == user_id).first()
     if not u:
         return None
+    print("Loading User...")
     return User(str(u.mongo_id),bool(u.admin))
     
-@app.route('/')
+    
+@app.route('/',methods=['GET','POST'])
 @login_required
 def index():
     user = Employee.query.get(current_user.get_id())
     if len(user.depts) == 1:
-        return redirect('/timeEntry/'+user.depts[0])
+        return redirect(url_for('timeEntry',dept=user.depts[0]),code=307)
     else:
         return render_template('multidepts.html', Timecard=Timecard, Employee=Employee)    
     
-@app.route('/timecard')
+  
+@app.route('/timecard',methods=['GET','POST'])
 def timecard():
     try:
         logout_user()
@@ -25,7 +28,7 @@ def timecard():
     Next = request.args.get('next')
     return render_template("login.html", next=Next)
 
-@app.route('/portal')
+@app.route('/portal',methods=['GET','POST'])
 @login_required
 def portal():
     return render_template('index.html', Employee=Employee)
@@ -58,7 +61,7 @@ def login():
             user_obj = User(str(user.mongo_id))
             login_user(user_obj, remember=False)
             print(Next)
-            return redirect(Next or url_for('index',Employee=Employee))
+            return redirect(Next or url_for('index',Employee=Employee),code=307)
         flash("Invalid credentials. Try again.")
         return render_template('login.html', next=Next)
     flash("Cannot access that page")
@@ -76,13 +79,13 @@ def logout():
 def register():
     return render_template('register.html')
 
-@app.route('/settings')
+@app.route('/settings',methods=['GET','POST'])
 @login_required
 def settings():
     return render_template('settings.html',Employee=Employee)
 
 @app.route('/changePass', methods=["GET","POST"])
-@login_required
+@fresh_login_required
 def changePass():
     if request.method=="POST":
         user = Employee.query.get(current_user.get_id())
@@ -107,7 +110,7 @@ def error():
         lastIn.save()
         user.clockedIn = "None"
         user.save()
-        return redirect(url_for('timeEntry',dept=dept,skip=True))
+        return redirect(url_for('timeEntry',dept=dept,skip=True),code=307)
     else:
         flash("You cannot access that page that way! Please try again!")
         return redirect(url_for('index',Employee=Employee))
@@ -116,8 +119,34 @@ def error():
 @login_required
 def cont():
     dept = request.args.get('dept')
-    return redirect(url_for('timeEntry',skip=True,dept=dept))
+    return redirect(url_for('timeEntry',skip=True,dept=dept),code=307)
+
+@app.route('/viewTimecard',methods=['GET','POST'])
+# @login_required
+def view():
+    user = Employee.query.get(current_user.get_id())
+    entryList = []
+    entries = Timecard.query.filter(Timecard.empID == user.empID, Timecard.action == "Clock In").descending(Timecard.datetime)
+    for entry in entries:
+        entryId = entry.timecardID
+        convertedIn = pytz.timezone('UTC').localize(entry.datetime).astimezone(tz)
+        try:
+            clockOut = Timecard.query.filter(Timecard.timecardID == entryId,Timecard.action == "Clock Out").first()
+            convertedOut = pytz.timezone('UTC').localize(clockOut.datetime).astimezone(tz)
+            duration = (convertedOut - convertedIn).total_seconds()//.36/10000
+            foo = Entry(entry.dept,convertedIn.strftime('%m/%d/%Y %I:%M %p'),convertedOut.strftime('%m/%d/%Y %I:%M %p'),duration)
+        except:
+            if user.clockedIn == entry.timecardID:
+                flag = 1
+                out = "Currently Clocked In"
+            else:
+                flag = 2
+                out = "Error"
+            foo = Entry(entry.dept,convertedIn.strftime('%m/%d/%Y %I:%M %p'),out,flag=flag)
+        entryList.append(foo)
+    return render_template('timecard.html',entries=entryList)
     
+
 @app.route('/timeEntry', methods=["GET","POST"])
 @login_required
 def timeEntry():
@@ -133,7 +162,7 @@ def timeEntry():
         clock.empID = user.empID
         clock.dept = dept
         clock.warning = False
-        time = datetime.datetime.now(pytz.timezone('America/Los_Angeles'))
+        time = datetime.datetime.now(tz)
         clock.datetime = time
         if user.clockedIn != "None":
             lastIn = Timecard.query.filter(Timecard.timecardID == user.clockedIn).first()
@@ -177,8 +206,7 @@ def timeEntry():
 #     clockIns = Timecard.query.filter(Timecard.empID == user.empID, Timecard.action == "Clock In").descending(Timecard.datetime).all()
 #     for entry in clockIns:
         
-    
-    
+
 @app.route('/<path>')
 def catchAll(path):
     return redirect(url_for('index'))

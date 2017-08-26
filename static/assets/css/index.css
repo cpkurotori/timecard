@@ -37,7 +37,8 @@ body {
     text-align: center;
     width: 90%;
     max-width: 350px;
-    height: 500px;
+    min-height: 500px;
+    padding: 15px;
     border: .5px solid rgba(0,0,0,0.3);
     box-shadow: 2px 5px 5px rgba(0,0,0,.3);
     top: 100px;
@@ -47,13 +48,8 @@ body {
     opacity: .85;
 }
 
-.box form{
-    position: relative;
-    top: 50%;
-    transform: translateY(-70%);
-}
-
 .box input{
+    position: relative;
     width: 70%;
     text-align: center;
     font-size: 16px;
@@ -88,7 +84,7 @@ input, button{
     box-shadow: 3px 3px 5px rgba(0,0,0,.3);
     padding: 4px;
     width: 100px;
-    margin: 20px auto;
+    margin: 15px auto;
     background-color: #00a4b3;
     vertical-align: middle;
     color: rgba(255,255,255,1);
@@ -151,4 +147,33 @@ a.noline{
     position: absolute;
     top: 20px;
     right: 40px;
+}
+
+.flag-1{
+    background-color: rgb(150,150,255);
+}
+
+.flag-2{
+    background-color: rgb(255,150,150);
+}
+
+.timecardView table{
+    border-collapse: collapse;
+    width: 75%;
+    min-width: 600px;
+    margin: 0 auto;
+}
+
+.timecardView td{
+    text-align: center;
+    padding: 4px;
+    border: 1px solid black;
+}
+
+.timecardView tr:hover{
+    color: rgba(0,0,0,.5);
+}
+
+.center {
+    text-align: center;
 }

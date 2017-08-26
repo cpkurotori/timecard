@@ -21,7 +21,7 @@
     <div class="box" id="login-box">
         {% block box %}
         {% endblock %}
-        <div id="timestamp" class="timestamp">Current Time:<span id="time"></span></div>
+        <div id="timestamp" class="timestamp">Current Time: <span id="time"></span></div>
     </div>
         {% with next = request.args.get('next') %}
             {% if next != "/portal" and request.url_rule.rule != '/portal' %}
