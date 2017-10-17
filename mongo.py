@@ -2,6 +2,7 @@ from flask_mongoalchemy import MongoAlchemy
 from flask_bcrypt import Bcrypt
 db=MongoAlchemy()
 bcrypt=Bcrypt()
+
 def generatePassword(fn,ln,empID):
     return str(fn[0]).lower()+str(ln[0]).lower()+str(empID) #first initial, last initial, employee id
 

@@ -1,4 +1,5 @@
 from config import *
+import json
 
 @lm.user_loader
 def load_user(user_id):
@@ -13,11 +14,10 @@ def load_user(user_id):
 @login_required
 def index():
     user = Employee.query.get(current_user.get_id())
-    if len(user.depts) == 1:
-        return redirect(url_for('timeEntry',dept=user.depts[0]),code=307)
+    if len(user.depts) > 1:
+        return render_template('multidepts.html', Timecard=Timecard, Employee=Employee) 
     else:
-        return render_template('multidepts.html', Timecard=Timecard, Employee=Employee)    
-    
+        return redirect(url_for('timeEntry',dept=user.depts[0]),code=307)
   
 @app.route('/timecard',methods=['GET','POST'])
 def timecard():
@@ -59,18 +59,17 @@ def login():
         user = Employee.query.filter(Employee.empID == request.form['employee-id']).first()
         if user and bcrypt.check_password_hash(user.password,request.form['employee-password']):
             user_obj = User(str(user.mongo_id))
-            login_user(user_obj, remember=False)
-            print(Next)
+            login_user(user_obj, remember=True)
             return redirect(Next or url_for('index',Employee=Employee),code=307)
-        flash("Invalid credentials. Try again.")
-        return render_template('login.html', next=Next)
-    flash("Cannot access that page")
-    return render_template('login.html', next=Next)
-
+        else:
+            flash("Invalid credentials. Try again.")
+    else:
+        flash("Cannot access that page")
+    return redirect(url_for('timecard', next=Next))
+    
 @app.route('/logout', methods=['GET','POST'])
 @login_required
 def logout():
-    logout_user()
     return redirect('/timecard')
         
         
@@ -152,7 +151,6 @@ def view():
 def timeEntry():
     if request.method == "POST":
         dept = request.args.get('dept')
-        print(dept)
         try:
             skip=bool(request.args.get('skip'))
         except:
@@ -196,7 +194,14 @@ def timeEntry():
         clock.save()
     else:
         flash("You cannot access that page that way! Please try again!")
-    return redirect(url_for('logout'))
+    return redirect(url_for('timecard'))
+    
+@app.route('/getCurrentUser')
+def getCurrentUser():
+    try:
+        return Employee.query.get(current_user.get_id()).empID
+    except:
+        return "NO USER"
     
 # @app.route('/getEntry')
 # def getEntry():
