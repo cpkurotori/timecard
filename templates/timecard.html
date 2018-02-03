@@ -7,6 +7,15 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     </head>
     <body>
+        {% with next = request.args.get('next') %}
+            {% if next != "portal" and request.url_rule.rule != 'portal' %}
+                <a class="home-link" href="{{ url_for('index', next='portal') }}">Go To Portal</a>
+            {% elif current_user.is_active %}
+                <a class="home-link" href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a class="home-link" href="{{ url_for('index') }}">Home</a>
+            {% endif %}
+        {% endwith %}
         <h1 class="center">View Timecard</h1>
         
         <div class="timecardView">

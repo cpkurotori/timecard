@@ -23,9 +23,13 @@
         {% endblock %}
         <div id="timestamp" class="timestamp">Current Time: <span id="time"></span></div>
     </div>
-        {% with next = request.args.get('next') %}
-            {% if next != "/portal" and request.url_rule.rule != '/portal' %}
-                <a class="portal-link" href="{{ url_for('portal') }}">Go To Portal</a>
+        {% with next = request.args.get('next', '').strip('/') %}
+            {% if next != "portal" and request.url_rule.rule != 'portal' %}
+                <a class="home-link" href="{{ url_for('index', next='portal') }}">Go To Portal</a>
+            {% elif current_user.is_active %}
+                <a class="home-link" href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a class="home-link" href="{{ url_for('index') }}">Home</a>
             {% endif %}
         {% endwith %}
     

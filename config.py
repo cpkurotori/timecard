@@ -1,6 +1,6 @@
 from flask import Flask, request, flash, render_template, redirect, url_for
 from flask_login import LoginManager, login_user, logout_user, login_required, fresh_login_required, current_user
-import os, datetime, pytz, uuid
+import os, datetime, pytz
 from flask_bcrypt import Bcrypt
 from datetime import timedelta
 from mongo import *
@@ -18,7 +18,7 @@ lm = LoginManager()
 bcrypt.init_app(app)
 db.init_app(app)
 lm.init_app(app)
-lm.login_view = "timecard"
+lm.login_view = "index"
 lm.login_message = "Please enter your Employee ID and Password below."
 
 tz = pytz.timezone('America/Los_Angeles')

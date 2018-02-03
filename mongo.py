@@ -1,5 +1,6 @@
 from flask_mongoalchemy import MongoAlchemy
 from flask_bcrypt import Bcrypt
+import uuid
 db=MongoAlchemy()
 bcrypt=Bcrypt()
 
@@ -34,6 +35,15 @@ class Timecard(db.Document):
     warning = db.BoolField()
     timecardID = db.StringField()
 
+    def init(self, empID, dept, warning, datetime):
+        self.empID = empID
+        self.dept = dept
+        self.datetime = datetime
+        self.warning = warning
+        self.timecardID = uuid.uuid4().hex
+        return self
+
+
 class User():
     def __init__(self,_id,admin=False):
         self.id = _id
@@ -48,3 +58,7 @@ class User():
         return self.admin
     def get_id(self):
         return self.id
+
+
+
+

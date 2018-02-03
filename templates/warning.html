@@ -1,11 +1,11 @@
 {% extends "screen.html" %}
 {% block box %}
-    <p style="color:red">You have been clocked in since {{ time }}. Either click
-    the button to indicate that this is an error or confrim that
+    <p style="color:red">You have been clocked in since {{ lastIn }}. Either click
+    the button to indicate that this is an error or confirm that
     you wish to continue.</p>
         <form id="error-form" action="{{ url_for('error',dept=dept) }}" method="POST"></form>
         <a class='noline' href="#" onclick="document.getElementById('error-form').submit()"><div class="button">This Was An Error</div></a>
-        <form id="cont-form" action="{{ url_for('error',dept=dept) }}" method="POST"></form>
+        <form id="cont-form" action="{{ url_for('makeEntry',dept=dept,skip=true) }}" method="POST"></form>
         <a class='noline' href="#" onclick="document.getElementById('cont-form').submit()"><div class="button">Confirm Continue</div></a>
         <a class='noline' href="{{ url_for('index') }}"><div class="button cancel">Cancel</div></a><br>
 
