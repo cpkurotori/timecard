@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Timecard</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/index.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='assets/font-awesome-4.7.0/css/font-awesome.min.css') }}">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    </head>
+    <body>
+        {% with next = request.args.get('next') %}
+            {% if next != "portal" and request.url_rule.rule != 'portal' %}
+                <a class="home-link" href="{{ url_for('index', next='portal') }}">Go To Portal</a>
+            {% elif current_user.is_active %}
+                <a class="home-link" href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a class="home-link" href="{{ url_for('index') }}">Home</a>
+            {% endif %}
+        {% endwith %}
+        <h1 class="center">View Timecard</h1>
+        
+        <div class="timecardView">
+            <table>
+                <tr>
+                    <th>Department</th>
+                    <th>Time In</th>
+                    <th>Time Out</th>
+                    <th>Duration (in hours)</th>
+                </tr>
+                {% for entry in entries %}
+                <tr {% if entry.flag != 0 %} class="flag-{{ entry.flag }}" {% endif %}>
+                    <td>{{ entry.dept }}</td>
+                    <td>{{ entry.inTime }}</td>
+                    <td>{{ entry.outTime }}</td>
+                    <td name="duration">{{ entry.duration }}</td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan=2 style="border:none"></td>
+                    <th style="text-align: right">Total:</th>
+                    <th id="totalHours"></th>
+                    <script>
+                        var totals = document.getElementsByName('duration');
+                        var sum = 0;
+                        for (var i = 0; i < totals.length; i++){
+                            sum += Number(totals[i].innerHTML);
+                        }
+                        
+                        document.getElementById('totalHours').innerHTML = sum;
+                    </script>
+                </tr>
+            {% block body %}
+            {% endblock %}
+            </table>
+        </div>
+    </body>
+</html>

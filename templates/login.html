@@ -1,0 +1,18 @@
+{% extends "screen.html" %}
+    {% block box %}
+    <h1>
+        Timecard
+        {% with next = request.args.get('next', '').strip('/') %}
+            {% if next == "portal" %}
+                Portal
+            {% endif %}
+        {% endwith %}
+    </h1>
+    <form id="login-form" method="POST" action="{{ url_for('login', next=next) }}">
+        <input id="employee-id" name="employee-id" type="text" placeholder="Employee ID #" autocomplete="off" required="true"><br>
+        <input id="employee-password" name="employee-password" type="password" placeholder="Password" autocomplete="off" required="true"><br>
+        <button type="submit" style="display:none"></button>
+    </form>
+        <a class="noline" href="#" onclick="document.getElementById('login-form').submit()"><div class="button">Submit</div></a>
+
+        {% endblock %}
