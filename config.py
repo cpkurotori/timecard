@@ -1,26 +1,32 @@
-from flask import Flask, request, flash, render_template, redirect, url_for
-from flask_login import LoginManager, login_user, logout_user, login_required, fresh_login_required, current_user
-import os, datetime, pytz
-from flask_bcrypt import Bcrypt
-from datetime import timedelta
-from mongo import *
-from classes import *
-
-DATABASE = os.environ['DB_NAME']
-CONNECTION_STRING = os.environ['DB_URI']
+from flask import Flask
+from flask_login import LoginManager
+import os
+import pytz
+from connect import *
 
 app = Flask(__name__)
-app.config['MONGOALCHEMY_DATABASE'] = DATABASE
-app.config['MONGOALCHEMY_CONNECTION_STRING'] = CONNECTION_STRING#flaskapp
 
-app.secret_key = "blackbird"
+try:
+    app.config['MONGOALCHEMY_DATABASE'] = os.environ['DB_NAME']
+    app.config['MONGOALCHEMY_CONNECTION_STRING'] = os.environ['DB_URI']
+except EnvironmentError as e:
+    print("Make sure you have DB_NAME and DB_URI Environment variables defined.")
+    raise e
 
+
+app.secret_key = "blackbird"  # shh it's a secret
+
+# Bcrypt
+bcrypt.init_app(app)  # Initialize BCrypt -- imported from mongo.py
+
+# Database
+db.init_app(app)  # Initialize Database Connection -- imported from mongo.py
+
+# Login Manager
 lm = LoginManager()
-
-bcrypt.init_app(app)
-db.init_app(app)
-lm.init_app(app)
+lm.init_app(app)  # Initialize Login Manager
 lm.login_view = "index"
 lm.login_message = "Please enter your Employee ID and Password below."
 
 tz = pytz.timezone('America/Los_Angeles')
+time_string = '%m/%d/%Y %I:%M %p'

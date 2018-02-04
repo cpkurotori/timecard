@@ -1,6 +1,6 @@
 {% extends "screen.html" %}
 {% block box %}
-    <p style="color:red">You have been clocked in since {{ lastIn }}. Either click
+    <p style="color:red">You have been clocked in since {{ last_in }}. Either click
     the button to indicate that this is an error or confirm that
     you wish to continue.</p>
         <form id="error-form" action="{{ url_for('error',dept=dept) }}" method="POST"></form>

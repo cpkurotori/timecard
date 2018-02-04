@@ -31,8 +31,11 @@ The application works on Python 2.7
 For a working example got to https://timecard-cpk.herokuapp.com/
 
 Here you can login with the following information:
+
 *employee id # / password*
+
 0438828/ck0438828
+
 0438829/zo0438829
 
 ### Things to do
