@@ -45,3 +45,8 @@ Here you can login with the following information:
     * manage employees
     * view error entries/and maintain
     * output entries to a csv file
+
+## Contributing
+Please contribute! This project was really just a project I decided to do because my local community pool was still using paper timecards for their employees! If you have ideas, PLEASE develop it and make a pull request. If it works and doesn't take away from the aesthetic or functionality of the main program, I'll most likely merge.
+
+Also checkout Issues for things that need to be done. Thanks! :D
