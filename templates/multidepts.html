@@ -3,12 +3,14 @@
         {% with user = get_user(current_user.get_id()) %}
             <h1><a class="menu-button" href="/"><i class="fa fa-home" aria-hidden="true"></i></a>{{ user.fn }} {{ user.ln }}<a class="menu-button" href="settings"><i class="fa fa-cog" aria-hidden="true"></i></a></h1>
             {% for dept in user.depts %}
-                <form id="{{ dept }}-timeEntry" action="{{ url_for('make_entry', dept=dept) }}" method="POST"></form>
-                <a class="noline" href="#" onclick="if (confirm('You chose: {{ dept }}\nWould you like to continue?')){document.getElementById('{{ dept }}-timeEntry').submit()}"><div class="button">{{ dept }}</div></a><br>
+                {% with d = get_dept(dept) %}
+                <form id="{{ d.name }}-timeEntry" action="{{ url_for('make_entry', dept=d.dept_id) }}" method="POST"></form>
+                <a class="noline" href="#" onclick="if (confirm('You chose: {{ d.name }}\nWould you like to continue?')){document.getElementById('{{ d.name }}-timeEntry').submit()}"><div class="button">{{ d.name }}</div></a><br>
+                {% endwith %}
             {% endfor %}
                 <a class="noline" href="{{ url_for('logout') }}"><div class="button cancel">Cancel</div></a><br>
             {% if user.clocked_in != "None" %}
-                <div id="currentlyClockedIn">Currently clocked in as: {{ get_timecard(user.clocked_in).dept }} </div>
+                <div id="currentlyClockedIn">Currently clocked in as: {{ get_dept(get_timecard(user.clocked_in).dept).name }} </div>
             {% endif %}
         {% endwith %}
     {% endblock %}

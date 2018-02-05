@@ -1,7 +1,9 @@
 {% extends "screen.html" %}
         {% block box %}
-        <h1><a class="menu-button" href="{{ url_for('portal') }}"><i class="fa fa-home" aria-hidden="true"></i></a>{{ Employee.query.get(current_user.get_id()).fn }} {{ Employee.query.get(current_user.get_id()).ln }}<a class="menu-button" href="settings"><i class="fa fa-cog" aria-hidden="true"></i></a></h1>
-        <form id="changePass" method="POST" action="changePass">
+            {% with user=get_user(current_user.get_id()) %}
+        <h1><a class="menu-button" href="{{ url_for('portal') }}"><i class="fa fa-home" aria-hidden="true"></i></a>{{ user.fn }} {{ user.ln }}<a class="menu-button" href="settings"><i class="fa fa-cog" aria-hidden="true"></i></a></h1>
+        {% endwith %}
+            <form id="changePass" method="POST" action="changePass">
             <input type="password" id="current-pass" name="current-pass" placeholder="Current Password" required="true">
             <input type="password" id="new-pass" name="new-pass" placeholder="New Password" required="true">
             <input type="password" id="new-pass-confirm" name="new-pass-confirm" placeholder="Retype New Password" required="true"><br>

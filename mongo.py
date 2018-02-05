@@ -16,6 +16,15 @@ def check_password(hashed, check):
     return bcrypt.check_password_hash(hashed, check)
 
 
+class Department(db.Document):
+    name = db.StringField()
+    dept_id = db.StringField()
+
+    def init(self, dept):
+        self.name = dept
+        self.dept_id = uuid.uuid4().hex
+        self.save()
+
 class Employee(db.Document):
     fn = db.StringField()
     ln = db.StringField()
@@ -39,6 +48,20 @@ class Employee(db.Document):
         self.save()
         return self
 
+    def clock_in(self, dept, datetime, warning=False):
+        assert dept in self.depts, "Department must be in user's departments"
+        assert self.clocked_in == "None", "Must be currently clocked out"
+        self.clocked_in = Timecard().init(self.emp_id, dept, datetime, "Clock In", warning=warning).timecard_id
+        self.save()
+
+    def clock_out(self, dept, datetime, warning=False):
+        assert self.clocked_in != "None", "Must be currently clocked in"
+        Timecard().init(self.emp_id, dept, datetime, "Clock Out", timecard_id=self.clocked_in, warning=warning)
+        self.clocked_in = "None"
+        self.save()
+
+
+
 
 class Timecard(db.Document):
     emp_id = db.StringField()
@@ -48,13 +71,15 @@ class Timecard(db.Document):
     warning = db.BoolField()
     timecard_id = db.StringField()
 
-    def init(self, emp_id, dept, warning, datetime):
+    def init(self, emp_id, dept, datetime, action, timecard_id=None, warning=False):
         """Creates timecard object"""
         self.emp_id = emp_id
         self.dept = dept
         self.datetime = datetime
         self.warning = warning
-        self.timecard_id = uuid.uuid4().hex
+        self.action = action
+        self.timecard_id = timecard_id or uuid.uuid4().hex
+        self.save()
         return self
 
 
@@ -77,3 +102,4 @@ class User:
 
     def get_id(self):
         return self.id
+

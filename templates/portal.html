@@ -8,7 +8,7 @@
             <a class="noline" href='{{ url_for("view") }}'><div class="button">View Entries</div></a>
             <a class='noline' href='{{ url_for("logout") }}'><div class="button cancel">Logout</div></a>
         {% if user.clocked_in != "None" %}
-            <div id="currentlyClockedIn">Currently clocked in as: {{ get_timecard(user.clocked_in).dept }} </div>
+            <div id="currentlyClockedIn">Currently clocked in as: {{ get_dept(get_timecard(user.clocked_in).dept).name }} </div>
         {% endif %}
     {% endwith %}
 {% endblock %}
