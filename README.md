@@ -39,5 +39,9 @@ Here you can login with the following information:
 0438829/zo0438829
 
 ### Things to do
-- Register Employee
+- Register Employee (completed 2/4/18)
+- view timecard limit to N entries per page
 - Admin Management
+    * manage employees
+    * view error entries/and maintain
+    * output entries to a csv file
