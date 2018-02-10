@@ -5,7 +5,7 @@
     you wish to continue.</p>
         <form id="error-form" action="{{ url_for('error',dept=dept) }}" method="POST"></form>
         <a class='noline' href="#" onclick="document.getElementById('error-form').submit()"><div class="button">This Was An Error</div></a>
-        <form id="cont-form" action="{{ url_for('makeEntry',dept=dept,skip=true) }}" method="POST"></form>
+        <form id="cont-form" action="{{ url_for('make_entry',dept=dept,skip=True) }}" method="POST"></form>
         <a class='noline' href="#" onclick="document.getElementById('cont-form').submit()"><div class="button">Confirm Continue</div></a>
         <a class='noline' href="{{ url_for('index') }}"><div class="button cancel">Cancel</div></a><br>
 

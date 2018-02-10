@@ -90,7 +90,7 @@ def multidept():
 @post_only("Cannot access that page", 'logout')
 def make_entry():
     user = get_current_user(current_user.get_id())
-    warning = request.args.get('skip', False)
+    warning = request.args.get('skip', False) == "True"
     dept = request.args['dept']
     time = datetime.datetime.now(tz)
     if user.clocked_in != "None":  # if currently clocked in
